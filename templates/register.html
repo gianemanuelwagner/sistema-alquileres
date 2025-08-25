@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Sistema de Alquileres</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="row justify-content-center py-5">
+            <div class="col-lg-8">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-5">
+                        <!-- Logo y título -->
+                        <div class="text-center mb-4">
+                            <div class="mb-3">
+                                <i class="bi bi-house-door-fill text-primary" style="font-size: 3rem;"></i>
+                            </div>
+                            <h2 class="fw-bold text-dark">Crear Cuenta</h2>
+                            <p class="text-muted">Únete a Alquileres Pro y gestiona tus propiedades</p>
+                        </div>
+
+                        <!-- Flash Messages -->
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                                        <i class="bi bi-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' }} me-2"></i>
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                        <!-- Formulario de registro -->
+                        <form method="POST" class="needs-validation" novalidate>
+                            <div class="row">
+                                <!-- Información personal -->
+                                <div class="col-md-6">
+                                    <h5 class="mb-3">
+                                        <i class="bi bi-person me-2"></i>
+                                        Información Personal
+                                    </h5>
+                                    
+                                    <div class="mb-3">
+                                        <label for="nombre" class="form-label">Nombre *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="nombre" 
+                                               name="nombre" 
+                                               required 
+                                               placeholder="Tu nombre">
+                                        <div class="invalid-feedback">
+                                            Por favor ingresa tu nombre.
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="apellido" class="form-label">Apellido *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="apellido" 
+                                               name="apellido" 
+                                               required 
+                                               placeholder="Tu apellido">
+                                        <div class="invalid-feedback">
+                                            Por favor ingresa tu apellido.
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email *</label>
+                                        <input type="email" 
+                                               class="form-control" 
+                                               id="email" 
+                                               name="email" 
+                                               required 
+                                               placeholder="tu@email.com">
+                                        <div class="invalid-feedback">
+                                            Por favor ingresa un email válido.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Información de cuenta -->
+                                <div class="col-md-6">
+                                    <h5 class="mb-3">
+                                        <i class="bi bi-shield-lock me-2"></i>
+                                        Información de Cuenta
+                                    </h5>
+                                    
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">Usuario *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="username" 
+                                               name="username" 
+                                               required 
+                                               placeholder="Nombre de usuario">
+                                        <div class="invalid-feedback">
+                                            Por favor ingresa un nombre de usuario.
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Contraseña *</label>
+                                        <input type="password" 
+                                               class="form-control" 
+                                               id="password" 
+                                               name="password" 
+                                               required 
+                                               placeholder="Mínimo 6 caracteres">
+                                        <div class="invalid-feedback">
+                                            La contraseña debe tener al menos 6 caracteres.
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="confirm_password" class="form-label">Confirmar Contraseña *</label>
+                                        <input type="password" 
+                                               class="form-control" 
+                                               id="confirm_password" 
+                                               name="confirm_password" 
+                                               required 
+                                               placeholder="Repite tu contraseña">
+                                        <div class="invalid-feedback">
+                                            Las contraseñas no coinciden.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Selección de paquete -->
+                            <div class="mt-4">
+                                <h5 class="mb-3">
+                                    <i class="bi bi-box me-2"></i>
+                                    Selecciona tu Paquete
+                                </h5>
+                                
+                                <div class="row">
+                                    {% for paquete in paquetes %}
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card h-100 paquete-card" onclick="selectPaquete({{ paquete.id }})">
+                                            <div class="card-body text-center">
+                                                <div class="mb-3">
+                                                    {% if paquete.nombre == 'Básico' %}
+                                                        <i class="bi bi-star text-warning fs-1"></i>
+                                                    {% elif paquete.nombre == 'Profesional' %}
+                                                        <i class="bi bi-star-fill text-warning fs-1"></i>
+                                                    {% else %}
+                                                        <i class="bi bi-stars text-warning fs-1"></i>
+                                                    {% endif %}
+                                                </div>
+                                                <h6 class="card-title">{{ paquete.nombre }}</h6>
+                                                <div class="mb-2">
+                                                    <span class="h5 text-primary">${{ "%.2f"|format(paquete.precio) }}</span>
+                                                    {% if paquete.precio > 0 %}
+                                                        <small class="text-muted">/mes</small>
+                                                    {% else %}
+                                                        <small class="text-success">Gratis</small>
+                                                    {% endif %}
+                                                </div>
+                                                <ul class="list-unstyled small text-muted">
+                                                    <li><i class="bi bi-check text-success me-1"></i>{{ paquete.max_propiedades }} propiedades</li>
+                                                    <li><i class="bi bi-check text-success me-1"></i>{{ paquete.max_inquilinos }} inquilinos</li>
+                                                    <li><i class="bi bi-check text-success me-1"></i>{{ paquete.max_contratos }} contratos</li>
+                                                </ul>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="paquete_id" 
+                                                           id="paquete_{{ paquete.id }}" value="{{ paquete.id }}" 
+                                                           {% if paquete.id == 1 %}checked{% endif %} required>
+                                                    <label class="form-check-label" for="paquete_{{ paquete.id }}">
+                                                        Seleccionar
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="d-flex justify-content-between align-items-center mt-4">
+                                <a href="{{ url_for('login') }}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-2"></i>
+                                    Volver al Login
+                                </a>
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-person-plus me-2"></i>
+                                    Crear Cuenta
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+    // Form validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('.needs-validation');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirm_password');
+        
+        // Validación de contraseñas
+        function validatePassword() {
+            if (password.value !== confirmPassword.value) {
+                confirmPassword.setCustomValidity('Las contraseñas no coinciden');
+            } else {
+                confirmPassword.setCustomValidity('');
+            }
+        }
+        
+        password.addEventListener('change', validatePassword);
+        confirmPassword.addEventListener('keyup', validatePassword);
+        
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        });
+    });
+
+    // Selección de paquete
+    function selectPaquete(paqueteId) {
+        // Desmarcar todos los radio buttons
+        document.querySelectorAll('input[name="paquete_id"]').forEach(radio => {
+            radio.checked = false;
+        });
+        
+        // Marcar el seleccionado
+        document.getElementById('paquete_' + paqueteId).checked = true;
+        
+        // Actualizar estilos de las tarjetas
+        document.querySelectorAll('.paquete-card').forEach(card => {
+            card.classList.remove('border-primary');
+        });
+        
+        // Resaltar la tarjeta seleccionada
+        event.currentTarget.classList.add('border-primary');
+    }
+    </script>
+
+    <style>
+    .paquete-card {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .paquete-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .paquete-card.border-primary {
+        border-color: var(--bs-primary) !important;
+    }
+    </style>
+</body>
+</html>

@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block title %}Inquilinos - Sistema de Alquileres{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h1 class="page-title">
+                    <i class="bi bi-people me-2"></i>
+                    Inquilinos
+                </h1>
+                <p class="page-subtitle">Gestiona todos los inquilinos del sistema</p>
+            </div>
+            <div class="col-auto">
+                <a href="{{ url_for('nuevo_inquilino') }}" class="btn btn-primary btn-new">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Nuevo Inquilino
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" class="form-control table-search" placeholder="Buscar inquilinos por nombre, email o DNI...">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="btn-group w-100">
+                        <button type="button" class="btn btn-outline-primary" id="exportBtn">
+                            <i class="bi bi-download me-2"></i>
+                            Exportar
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="printBtn">
+                            <i class="bi bi-printer me-2"></i>
+                            Imprimir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tenants Table -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="bi bi-list me-2"></i>
+                Lista de Inquilinos
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre Completo</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                            <th>DNI</th>
+                            <th>Fecha Registro</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if inquilinos %}
+                            {% for inquilino in inquilinos %}
+                            <tr>
+                                <td>
+                                    <span class="badge bg-secondary">#{{ inquilino.id }}</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar me-3">
+                                            <i class="bi bi-person-circle fs-4 text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <strong>{{ inquilino.nombre }} {{ inquilino.apellido }}</strong>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if inquilino.email %}
+                                        <a href="mailto:{{ inquilino.email }}" class="text-decoration-none">
+                                            <i class="bi bi-envelope me-1"></i>
+                                            {{ inquilino.email }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">No especificado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if inquilino.telefono %}
+                                        <a href="tel:{{ inquilino.telefono }}" class="text-decoration-none">
+                                            <i class="bi bi-telephone me-1"></i>
+                                            {{ inquilino.telefono }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">No especificado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">{{ inquilino.dni }}</span>
+                                </td>
+                                <td>
+                                    <small class="text-muted">
+                                        {{ inquilino.fecha_creacion.split(' ')[0] if inquilino.fecha_creacion else 'N/A' }}
+                                    </small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success status-badge">Activo</span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ url_for('editar_inquilino', id=inquilino.id) }}" 
+                                           class="btn btn-outline-primary" 
+                                           data-bs-toggle="tooltip" title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button class="btn btn-outline-info btn-copy" 
+                                                data-clipboard-text="{{ inquilino.email or inquilino.telefono }}"
+                                                data-bs-toggle="tooltip" title="Copiar contacto">
+                                            <i class="bi bi-clipboard"></i>
+                                        </button>
+                                        <a href="#" class="btn btn-outline-success" 
+                                           data-bs-toggle="tooltip" title="Ver contratos">
+                                            <i class="bi bi-file-earmark-text"></i>
+                                        </a>
+                                        <form method="POST" action="{{ url_for('eliminar_inquilino', id=inquilino.id) }}" 
+                                              class="d-inline">
+                                            <button type="submit" class="btn btn-outline-danger btn-delete" 
+                                                    data-bs-toggle="tooltip" title="Eliminar">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="8" class="text-center py-5">
+                                    <div class="text-muted">
+                                        <i class="bi bi-people display-4"></i>
+                                        <h5 class="mt-3">No hay inquilinos registrados</h5>
+                                        <p>Comienza agregando tu primer inquilino al sistema.</p>
+                                        <a href="{{ url_for('nuevo_inquilino') }}" class="btn btn-primary">
+                                            <i class="bi bi-plus-circle me-2"></i>
+                                            Agregar Inquilino
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Summary -->
+    {% if inquilinos %}
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h4>{{ inquilinos|length }}</h4>
+                    <p class="mb-0">Total Inquilinos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <h4>{{ inquilinos|selectattr('email')|list|length }}</h4>
+                    <p class="mb-0">Con Email</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <h4>{{ inquilinos|selectattr('telefono')|list|length }}</h4>
+                    <p class="mb-0">Con Teléfono</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body text-center">
+                    <h4>{{ inquilinos|selectattr('dni')|list|length }}</h4>
+                    <p class="mb-0">Con DNI</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+// Export functionality
+document.getElementById('exportBtn').addEventListener('click', function() {
+    // Simple CSV export
+    const table = document.querySelector('table');
+    const rows = table.querySelectorAll('tbody tr');
+    let csv = 'ID,Nombre,Email,Teléfono,DNI,Fecha Registro\n';
+    
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length > 1) {
+            const id = cells[0].textContent.trim();
+            const nombre = cells[1].textContent.trim();
+            const email = cells[2].textContent.trim();
+            const telefono = cells[3].textContent.trim();
+            const dni = cells[4].textContent.trim();
+            const fecha = cells[5].textContent.trim();
+            
+            csv += `"${id}","${nombre}","${email}","${telefono}","${dni}","${fecha}"\n`;
+        }
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'inquilinos.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+});
+
+// Print functionality
+document.getElementById('printBtn').addEventListener('click', function() {
+    window.print();
+});
+</script>
+{% endblock %}

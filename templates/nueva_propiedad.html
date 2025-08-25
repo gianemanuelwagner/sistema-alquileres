@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block title %}Nueva Propiedad - Sistema de Alquileres{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h1 class="page-title">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Nueva Propiedad
+                </h1>
+                <p class="page-subtitle">Agrega una nueva propiedad al sistema</p>
+            </div>
+            <div class="col-auto">
+                <a href="{{ url_for('propiedades') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    Volver a Propiedades
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-house-door me-2"></i>
+                        Información de la Propiedad
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation auto-save" novalidate>
+                        <div class="row">
+                            <!-- Dirección -->
+                            <div class="col-md-12 mb-3">
+                                <label for="direccion" class="form-label">
+                                    <i class="bi bi-geo-alt me-1"></i>
+                                    Dirección *
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="direccion" 
+                                       name="direccion" 
+                                       required 
+                                       placeholder="Ej: Av. Corrientes 1234, CABA">
+                                <div class="invalid-feedback">
+                                    Por favor ingresa la dirección de la propiedad.
+                                </div>
+                            </div>
+
+                            <!-- Tipo de Propiedad -->
+                            <div class="col-md-6 mb-3">
+                                <label for="tipo" class="form-label">
+                                    <i class="bi bi-house me-1"></i>
+                                    Tipo de Propiedad *
+                                </label>
+                                <select class="form-select" id="tipo" name="tipo" required>
+                                    <option value="">Selecciona un tipo</option>
+                                    <option value="casa">Casa</option>
+                                    <option value="departamento">Departamento</option>
+                                    <option value="local">Local Comercial</option>
+                                    <option value="oficina">Oficina</option>
+                                    <option value="terreno">Terreno</option>
+                                    <option value="galpon">Galpón</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Por favor selecciona el tipo de propiedad.
+                                </div>
+                            </div>
+
+                            <!-- Precio -->
+                            <div class="col-md-6 mb-3">
+                                <label for="precio" class="form-label">
+                                    <i class="bi bi-currency-dollar me-1"></i>
+                                    Precio Mensual *
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" 
+                                           class="form-control price-input" 
+                                           id="precio" 
+                                           name="precio" 
+                                           step="0.01" 
+                                           min="0" 
+                                           required 
+                                           placeholder="0.00">
+                                </div>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa el precio mensual.
+                                </div>
+                            </div>
+
+                            <!-- Habitaciones -->
+                            <div class="col-md-6 mb-3">
+                                <label for="habitaciones" class="form-label">
+                                    <i class="bi bi-door-open me-1"></i>
+                                    Número de Habitaciones
+                                </label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="habitaciones" 
+                                       name="habitaciones" 
+                                       min="0" 
+                                       max="20" 
+                                       placeholder="0">
+                                <div class="form-text">
+                                    Deja en 0 si no aplica (ej: locales comerciales)
+                                </div>
+                            </div>
+
+                            <!-- Baños -->
+                            <div class="col-md-6 mb-3">
+                                <label for="baños" class="form-label">
+                                    <i class="bi bi-droplet me-1"></i>
+                                    Número de Baños
+                                </label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="baños" 
+                                       name="baños" 
+                                       min="0" 
+                                       max="10" 
+                                       placeholder="0">
+                                <div class="form-text">
+                                    Incluye baños completos y medios baños
+                                </div>
+                            </div>
+
+                            <!-- Características Adicionales -->
+                            <div class="col-12 mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-list-check me-1"></i>
+                                    Características Adicionales
+                                </label>
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="garage" name="caracteristicas[]" value="garage">
+                                            <label class="form-check-label" for="garage">
+                                                <i class="bi bi-car-front me-1"></i>
+                                                Garage
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="balcon" name="caracteristicas[]" value="balcon">
+                                            <label class="form-check-label" for="balcon">
+                                                <i class="bi bi-door-open me-1"></i>
+                                                Balcón
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="aire" name="caracteristicas[]" value="aire">
+                                            <label class="form-check-label" for="aire">
+                                                <i class="bi bi-snow me-1"></i>
+                                                Aire Acondicionado
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="calefaccion" name="caracteristicas[]" value="calefaccion">
+                                            <label class="form-check-label" for="calefaccion">
+                                                <i class="bi bi-thermometer-half me-1"></i>
+                                                Calefacción
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Descripción -->
+                            <div class="col-12 mb-3">
+                                <label for="descripcion" class="form-label">
+                                    <i class="bi bi-text-paragraph me-1"></i>
+                                    Descripción
+                                </label>
+                                <textarea class="form-control" 
+                                          id="descripcion" 
+                                          name="descripcion" 
+                                          rows="4" 
+                                          placeholder="Describe las características especiales de la propiedad..."></textarea>
+                                <div class="form-text">
+                                    Información adicional sobre la propiedad (opcional)
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <a href="{{ url_for('propiedades') }}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle me-2"></i>
+                                    Cancelar
+                                </a>
+                            </div>
+                            <div>
+                                <button type="reset" class="btn btn-outline-warning me-2">
+                                    <i class="bi bi-arrow-clockwise me-2"></i>
+                                    Limpiar
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle me-2"></i>
+                                    Guardar Propiedad
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Help Card -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="bi bi-question-circle me-2"></i>
+                        Consejos para completar el formulario
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li><strong>Dirección:</strong> Incluye calle, número, piso y departamento si corresponde.</li>
+                        <li><strong>Tipo:</strong> Selecciona el tipo que mejor describa la propiedad.</li>
+                        <li><strong>Precio:</strong> Establece un precio competitivo para el mercado local.</li>
+                        <li><strong>Habitaciones:</strong> Cuenta solo las habitaciones principales (no baños ni cocina).</li>
+                        <li><strong>Características:</strong> Marca todas las características que tenga la propiedad.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation and enhancement
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.needs-validation');
+    
+    // Real-time validation
+    const inputs = form.querySelectorAll('input[required], select[required]');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+    });
+
+    // Price formatting
+    const priceInput = document.getElementById('precio');
+    priceInput.addEventListener('blur', function() {
+        const value = parseFloat(this.value);
+        if (!isNaN(value)) {
+            this.value = value.toFixed(2);
+        }
+    });
+
+    // Auto-save functionality
+    const formData = new FormData(form);
+    const inputsToSave = form.querySelectorAll('input, select, textarea');
+    
+    inputsToSave.forEach(input => {
+        input.addEventListener('change', function() {
+            const data = {};
+            inputsToSave.forEach(inp => {
+                if (inp.type === 'checkbox') {
+                    data[inp.name] = inp.checked;
+                } else {
+                    data[inp.name] = inp.value;
+                }
+            });
+            localStorage.setItem('nueva_propiedad_form', JSON.stringify(data));
+        });
+    });
+
+    // Restore form data
+    const savedData = localStorage.getItem('nueva_propiedad_form');
+    if (savedData) {
+        const data = JSON.parse(savedData);
+        Object.keys(data).forEach(key => {
+            const input = form.querySelector(`[name="${key}"]`);
+            if (input) {
+                if (input.type === 'checkbox') {
+                    input.checked = data[key];
+                } else {
+                    input.value = data[key];
+                }
+            }
+        });
+    }
+
+    // Clear saved data on successful submit
+    form.addEventListener('submit', function() {
+        if (this.checkValidity()) {
+            localStorage.removeItem('nueva_propiedad_form');
+        }
+    });
+});
+</script>
+{% endblock %}

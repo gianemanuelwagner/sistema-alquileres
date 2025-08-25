@@ -1,0 +1,401 @@
+{% extends "base.html" %}
+
+{% block title %}Nuevo Inquilino - Sistema de Alquileres{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h1 class="page-title">
+                    <i class="bi bi-person-plus me-2"></i>
+                    Nuevo Inquilino
+                </h1>
+                <p class="page-subtitle">Registra un nuevo inquilino en el sistema</p>
+            </div>
+            <div class="col-auto">
+                <a href="{{ url_for('inquilinos') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    Volver a Inquilinos
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person me-2"></i>
+                        Información Personal
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation auto-save" novalidate>
+                        <div class="row">
+                            <!-- Nombre -->
+                            <div class="col-md-6 mb-3">
+                                <label for="nombre" class="form-label">
+                                    <i class="bi bi-person me-1"></i>
+                                    Nombre *
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="nombre" 
+                                       name="nombre" 
+                                       required 
+                                       placeholder="Ej: Juan">
+                                <div class="invalid-feedback">
+                                    Por favor ingresa el nombre del inquilino.
+                                </div>
+                            </div>
+
+                            <!-- Apellido -->
+                            <div class="col-md-6 mb-3">
+                                <label for="apellido" class="form-label">
+                                    <i class="bi bi-person me-1"></i>
+                                    Apellido *
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="apellido" 
+                                       name="apellido" 
+                                       required 
+                                       placeholder="Ej: Pérez">
+                                <div class="invalid-feedback">
+                                    Por favor ingresa el apellido del inquilino.
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">
+                                    <i class="bi bi-envelope me-1"></i>
+                                    Email
+                                </label>
+                                <input type="email" 
+                                       class="form-control" 
+                                       id="email" 
+                                       name="email" 
+                                       placeholder="juan.perez@email.com">
+                                <div class="form-text">
+                                    Email de contacto (opcional pero recomendado)
+                                </div>
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div class="col-md-6 mb-3">
+                                <label for="telefono" class="form-label">
+                                    <i class="bi bi-telephone me-1"></i>
+                                    Teléfono
+                                </label>
+                                <input type="tel" 
+                                       class="form-control phone-input" 
+                                       id="telefono" 
+                                       name="telefono" 
+                                       placeholder="(11) 1234-5678">
+                                <div class="form-text">
+                                    Número de teléfono de contacto
+                                </div>
+                            </div>
+
+                            <!-- DNI -->
+                            <div class="col-md-6 mb-3">
+                                <label for="dni" class="form-label">
+                                    <i class="bi bi-card-text me-1"></i>
+                                    DNI *
+                                </label>
+                                <input type="text" 
+                                       class="form-control dni-input" 
+                                       id="dni" 
+                                       name="dni" 
+                                       required 
+                                       maxlength="8"
+                                       placeholder="12345678">
+                                <div class="invalid-feedback">
+                                    Por favor ingresa el DNI del inquilino.
+                                </div>
+                            </div>
+
+                            <!-- Fecha de Nacimiento -->
+                            <div class="col-md-6 mb-3">
+                                <label for="fecha_nacimiento" class="form-label">
+                                    <i class="bi bi-calendar me-1"></i>
+                                    Fecha de Nacimiento
+                                </label>
+                                <input type="date" 
+                                       class="form-control" 
+                                       id="fecha_nacimiento" 
+                                       name="fecha_nacimiento">
+                                <div class="form-text">
+                                    Para verificación de edad (opcional)
+                                </div>
+                            </div>
+
+                            <!-- Ocupación -->
+                            <div class="col-md-6 mb-3">
+                                <label for="ocupacion" class="form-label">
+                                    <i class="bi bi-briefcase me-1"></i>
+                                    Ocupación
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="ocupacion" 
+                                       name="ocupacion" 
+                                       placeholder="Ej: Empleado, Estudiante, etc.">
+                            </div>
+
+                            <!-- Ingresos Mensuales -->
+                            <div class="col-md-6 mb-3">
+                                <label for="ingresos" class="form-label">
+                                    <i class="bi bi-currency-dollar me-1"></i>
+                                    Ingresos Mensuales
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" 
+                                           class="form-control price-input" 
+                                           id="ingresos" 
+                                           name="ingresos" 
+                                           step="0.01" 
+                                           min="0" 
+                                           placeholder="0.00">
+                                </div>
+                                <div class="form-text">
+                                    Para evaluación de capacidad de pago
+                                </div>
+                            </div>
+
+                            <!-- Información de Contacto de Emergencia -->
+                            <div class="col-12 mb-3">
+                                <h6 class="form-label">
+                                    <i class="bi bi-exclamation-triangle me-1"></i>
+                                    Contacto de Emergencia
+                                </h6>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <input type="text" 
+                                               class="form-control" 
+                                               name="emergencia_nombre" 
+                                               placeholder="Nombre del contacto de emergencia">
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <input type="tel" 
+                                               class="form-control phone-input" 
+                                               name="emergencia_telefono" 
+                                               placeholder="Teléfono de emergencia">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Observaciones -->
+                            <div class="col-12 mb-3">
+                                <label for="observaciones" class="form-label">
+                                    <i class="bi bi-text-paragraph me-1"></i>
+                                    Observaciones
+                                </label>
+                                <textarea class="form-control" 
+                                          id="observaciones" 
+                                          name="observaciones" 
+                                          rows="3" 
+                                          placeholder="Información adicional sobre el inquilino..."></textarea>
+                                <div class="form-text">
+                                    Notas especiales o información relevante
+                                </div>
+                            </div>
+
+                            <!-- Documentación -->
+                            <div class="col-12 mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-file-earmark-check me-1"></i>
+                                    Documentación Requerida
+                                </label>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="dni_verificado" name="documentacion[]" value="dni_verificado">
+                                            <label class="form-check-label" for="dni_verificado">
+                                                DNI Verificado
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="recibo_sueldo" name="documentacion[]" value="recibo_sueldo">
+                                            <label class="form-check-label" for="recibo_sueldo">
+                                                Recibo de Sueldo
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="garante" name="documentacion[]" value="garante">
+                                            <label class="form-check-label" for="garante">
+                                                Garante
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <a href="{{ url_for('inquilinos') }}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle me-2"></i>
+                                    Cancelar
+                                </a>
+                            </div>
+                            <div>
+                                <button type="reset" class="btn btn-outline-warning me-2">
+                                    <i class="bi bi-arrow-clockwise me-2"></i>
+                                    Limpiar
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle me-2"></i>
+                                    Guardar Inquilino
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Help Card -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="bi bi-question-circle me-2"></i>
+                        Información Importante
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Campos Obligatorios:</h6>
+                            <ul class="mb-0">
+                                <li>Nombre y Apellido</li>
+                                <li>DNI (documento único)</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Recomendaciones:</h6>
+                            <ul class="mb-0">
+                                <li>Completa todos los campos de contacto</li>
+                                <li>Verifica la documentación antes de guardar</li>
+                                <li>Incluye un contacto de emergencia</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation and enhancement
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.needs-validation');
+    
+    // Real-time validation
+    const inputs = form.querySelectorAll('input[required], select[required]');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+    });
+
+    // Phone number formatting
+    const phoneInputs = document.querySelectorAll('.phone-input');
+    phoneInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 0) {
+                if (value.length <= 2) {
+                    value = `(${value}`;
+                } else if (value.length <= 6) {
+                    value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
+                } else {
+                    value = `(${value.substring(0, 2)}) ${value.substring(2, 6)}-${value.substring(6, 10)}`;
+                }
+            }
+            this.value = value;
+        });
+    });
+
+    // DNI formatting
+    const dniInputs = document.querySelectorAll('.dni-input');
+    dniInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 8) {
+                value = value.substring(0, 8);
+            }
+            this.value = value;
+        });
+    });
+
+    // Price formatting
+    const priceInputs = document.querySelectorAll('.price-input');
+    priceInputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            const value = parseFloat(this.value);
+            if (!isNaN(value)) {
+                this.value = value.toFixed(2);
+            }
+        });
+    });
+
+    // Auto-save functionality
+    const inputsToSave = form.querySelectorAll('input, select, textarea');
+    
+    inputsToSave.forEach(input => {
+        input.addEventListener('change', function() {
+            const data = {};
+            inputsToSave.forEach(inp => {
+                if (inp.type === 'checkbox') {
+                    data[inp.name] = inp.checked;
+                } else {
+                    data[inp.name] = inp.value;
+                }
+            });
+            localStorage.setItem('nuevo_inquilino_form', JSON.stringify(data));
+        });
+    });
+
+    // Restore form data
+    const savedData = localStorage.getItem('nuevo_inquilino_form');
+    if (savedData) {
+        const data = JSON.parse(savedData);
+        Object.keys(data).forEach(key => {
+            const input = form.querySelector(`[name="${key}"]`);
+            if (input) {
+                if (input.type === 'checkbox') {
+                    input.checked = data[key];
+                } else {
+                    input.value = data[key];
+                }
+            }
+        });
+    }
+
+    // Clear saved data on successful submit
+    form.addEventListener('submit', function() {
+        if (this.checkValidity()) {
+            localStorage.removeItem('nuevo_inquilino_form');
+        }
+    });
+});
+</script>
+{% endblock %}

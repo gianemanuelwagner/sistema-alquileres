@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Contrato - Sistema de Alquileres{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h1 class="page-title">
+                    <i class="bi bi-pencil-square me-2"></i>
+                    Editar Contrato
+                </h1>
+                <p class="page-subtitle">Modifica la información del contrato</p>
+            </div>
+            <div class="col-auto">
+                <a href="{{ url_for('contratos') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    Volver a Contratos
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        Información del Contrato
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation" novalidate>
+                        <div class="row">
+                            <!-- Propiedad (Read-only) -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                                                         <i class="bi bi-house-door me-1"></i>
+                                     Propiedad
+                                </label>
+                                <div class="form-control-plaintext">
+                                    <strong>{{ contrato.direccion }}</strong>
+                                    <small class="text-muted d-block">ID: #{{ contrato.propiedad_id }}</small>
+                                </div>
+                            </div>
+
+                            <!-- Inquilino (Read-only) -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-person me-1"></i>
+                                    Inquilino
+                                </label>
+                                <div class="form-control-plaintext">
+                                    <strong>{{ contrato.nombre }} {{ contrato.apellido }}</strong>
+                                    <small class="text-muted d-block">ID: #{{ contrato.inquilino_id }}</small>
+                                </div>
+                            </div>
+
+                            <!-- Fecha de Inicio -->
+                            <div class="col-md-6 mb-3">
+                                <label for="fecha_inicio" class="form-label">
+                                    <i class="bi bi-calendar-plus me-1"></i>
+                                    Fecha de Inicio *
+                                </label>
+                                <input type="date" 
+                                       class="form-control start-date" 
+                                       id="fecha_inicio" 
+                                       name="fecha_inicio" 
+                                       value="{{ contrato.fecha_inicio }}"
+                                       required>
+                                <div class="invalid-feedback">
+                                    Por favor selecciona la fecha de inicio.
+                                </div>
+                            </div>
+
+                            <!-- Fecha de Fin -->
+                            <div class="col-md-6 mb-3">
+                                <label for="fecha_fin" class="form-label">
+                                    <i class="bi bi-calendar-x me-1"></i>
+                                    Fecha de Fin *
+                                </label>
+                                <input type="date" 
+                                       class="form-control end-date" 
+                                       id="fecha_fin" 
+                                       name="fecha_fin" 
+                                       value="{{ contrato.fecha_fin }}"
+                                       required>
+                                <div class="invalid-feedback">
+                                    Por favor selecciona la fecha de fin.
+                                </div>
+                            </div>
+
+                            <!-- Precio Mensual -->
+                            <div class="col-md-6 mb-3">
+                                <label for="precio_mensual" class="form-label">
+                                    <i class="bi bi-currency-dollar me-1"></i>
+                                    Precio Mensual *
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" 
+                                           class="form-control price-input" 
+                                           id="precio_mensual" 
+                                           name="precio_mensual" 
+                                           value="{{ contrato.precio_mensual }}"
+                                           step="0.01" 
+                                           min="0" 
+                                           required 
+                                           placeholder="0.00">
+                                </div>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa el precio mensual.
+                                </div>
+                            </div>
+
+                            <!-- Estado -->
+                            <div class="col-md-6 mb-3">
+                                <label for="estado" class="form-label">
+                                    <i class="bi bi-check-circle me-1"></i>
+                                    Estado *
+                                </label>
+                                <select class="form-select" id="estado" name="estado" required>
+                                    <option value="activo" {{ 'selected' if contrato.estado == 'activo' }}>Activo</option>
+                                    <option value="vencido" {{ 'selected' if contrato.estado == 'vencido' }}>Vencido</option>
+                                    <option value="cancelado" {{ 'selected' if contrato.estado == 'cancelado' }}>Cancelado</option>
+                                    <option value="renovado" {{ 'selected' if contrato.estado == 'renovado' }}>Renovado</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Por favor selecciona el estado del contrato.
+                                </div>
+                            </div>
+
+                            <!-- Duración del Contrato -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-clock me-1"></i>
+                                    Duración del Contrato
+                                </label>
+                                <div class="form-control-plaintext" id="duracion">
+                                    Calculando...
+                                </div>
+                            </div>
+
+                            <!-- Información del Sistema -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Información del Sistema
+                                </label>
+                                <div class="form-control-plaintext">
+                                    <small class="text-muted">
+                                        <strong>ID:</strong> #{{ contrato.id }}<br>
+                                        <strong>Creado:</strong> {{ contrato.fecha_creacion.split(' ')[0] if contrato.fecha_creacion else 'N/A' }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <a href="{{ url_for('contratos') }}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle me-2"></i>
+                                    Cancelar
+                                </a>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle me-2"></i>
+                                    Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Contract Info Card -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Información del Contrato
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Detalles del Contrato:</h6>
+                            <ul class="mb-0">
+                                <li><strong>ID:</strong> #{{ contrato.id }}</li>
+                                <li><strong>Propiedad:</strong> {{ contrato.direccion }}</li>
+                                <li><strong>Inquilino:</strong> {{ contrato.nombre }} {{ contrato.apellido }}</li>
+                                <li><strong>Precio Mensual:</strong> ${{ "%.2f"|format(contrato.precio_mensual) }}</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Fechas y Estado:</h6>
+                            <ul class="mb-0">
+                                <li><strong>Inicio:</strong> {{ contrato.fecha_inicio }}</li>
+                                <li><strong>Fin:</strong> {{ contrato.fecha_fin }}</li>
+                                <li><strong>Estado:</strong> 
+                                    <span class="badge bg-{{ 'success' if contrato.estado == 'activo' else 'danger' if contrato.estado == 'cancelado' else 'secondary' }}">
+                                        {{ contrato.estado.title() }}
+                                    </span>
+                                </li>
+                                <li><strong>Creado:</strong> {{ contrato.fecha_creacion.split(' ')[0] if contrato.fecha_creacion else 'N/A' }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation and enhancement
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.needs-validation');
+    const fechaInicio = document.getElementById('fecha_inicio');
+    const fechaFin = document.getElementById('fecha_fin');
+    const duracionDiv = document.getElementById('duracion');
+    
+    // Calculate duration when dates change
+    function calculateDuration() {
+        if (fechaInicio.value && fechaFin.value) {
+            const start = new Date(fechaInicio.value);
+            const end = new Date(fechaFin.value);
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const months = Math.floor(diffDays / 30);
+            const days = diffDays % 30;
+            
+            let durationText = '';
+            if (months > 0) {
+                durationText += `${months} mes${months > 1 ? 'es' : ''}`;
+            }
+            if (days > 0) {
+                durationText += `${durationText ? ' y ' : ''}${days} día${days > 1 ? 's' : ''}`;
+            }
+            
+            duracionDiv.textContent = durationText || '0 días';
+        }
+    }
+
+    fechaInicio.addEventListener('change', function() {
+        fechaFin.min = this.value;
+        calculateDuration();
+    });
+
+    fechaFin.addEventListener('change', function() {
+        fechaInicio.max = this.value;
+        calculateDuration();
+    });
+
+    // Calculate initial duration
+    calculateDuration();
+
+    // Real-time validation
+    const inputs = form.querySelectorAll('input[required], select[required]');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+    });
+
+    // Price formatting
+    const priceInputs = document.querySelectorAll('.price-input');
+    priceInputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            const value = parseFloat(this.value);
+            if (!isNaN(value)) {
+                this.value = value.toFixed(2);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

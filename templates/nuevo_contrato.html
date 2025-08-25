@@ -1,0 +1,429 @@
+{% extends "base.html" %}
+
+{% block title %}Nuevo Contrato - Sistema de Alquileres{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h1 class="page-title">
+                    <i class="bi bi-file-earmark-plus me-2"></i>
+                    Nuevo Contrato
+                </h1>
+                <p class="page-subtitle">Crea un nuevo contrato de alquiler</p>
+            </div>
+            <div class="col-auto">
+                <a href="{{ url_for('contratos') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    Volver a Contratos
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        Información del Contrato
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation auto-save" novalidate>
+                        <div class="row">
+                            <!-- Propiedad -->
+                            <div class="col-md-6 mb-3">
+                                <label for="propiedad_id" class="form-label">
+                                                                         <i class="bi bi-house-door me-1"></i>
+                                     Propiedad *
+                                </label>
+                                <select class="form-select" id="propiedad_id" name="propiedad_id" required>
+                                    <option value="">Selecciona una propiedad</option>
+                                    {% for propiedad in propiedades %}
+                                    <option value="{{ propiedad.id }}" data-precio="{{ propiedad.precio }}">
+                                        {{ propiedad.direccion }} - {{ propiedad.tipo.title() }} (${{ "%.2f"|format(propiedad.precio) }})
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="invalid-feedback">
+                                    Por favor selecciona una propiedad.
+                                </div>
+                                {% if not propiedades %}
+                                <div class="form-text text-warning">
+                                    <i class="bi bi-exclamation-triangle me-1"></i>
+                                    No hay propiedades disponibles. 
+                                    <a href="{{ url_for('nueva_propiedad') }}">Agregar propiedad</a>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Inquilino -->
+                            <div class="col-md-6 mb-3">
+                                <label for="inquilino_id" class="form-label">
+                                    <i class="bi bi-person me-1"></i>
+                                    Inquilino *
+                                </label>
+                                <select class="form-select" id="inquilino_id" name="inquilino_id" required>
+                                    <option value="">Selecciona un inquilino</option>
+                                    {% for inquilino in inquilinos %}
+                                    <option value="{{ inquilino.id }}">
+                                        {{ inquilino.nombre }} {{ inquilino.apellido }} ({{ inquilino.dni }})
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="invalid-feedback">
+                                    Por favor selecciona un inquilino.
+                                </div>
+                                {% if not inquilinos %}
+                                <div class="form-text text-warning">
+                                    <i class="bi bi-exclamation-triangle me-1"></i>
+                                    No hay inquilinos registrados. 
+                                    <a href="{{ url_for('nuevo_inquilino') }}">Agregar inquilino</a>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Fecha de Inicio -->
+                            <div class="col-md-6 mb-3">
+                                <label for="fecha_inicio" class="form-label">
+                                    <i class="bi bi-calendar-plus me-1"></i>
+                                    Fecha de Inicio *
+                                </label>
+                                <input type="date" 
+                                       class="form-control start-date" 
+                                       id="fecha_inicio" 
+                                       name="fecha_inicio" 
+                                       required>
+                                <div class="invalid-feedback">
+                                    Por favor selecciona la fecha de inicio.
+                                </div>
+                            </div>
+
+                            <!-- Fecha de Fin -->
+                            <div class="col-md-6 mb-3">
+                                <label for="fecha_fin" class="form-label">
+                                    <i class="bi bi-calendar-x me-1"></i>
+                                    Fecha de Fin *
+                                </label>
+                                <input type="date" 
+                                       class="form-control end-date" 
+                                       id="fecha_fin" 
+                                       name="fecha_fin" 
+                                       required>
+                                <div class="invalid-feedback">
+                                    Por favor selecciona la fecha de fin.
+                                </div>
+                            </div>
+
+                            <!-- Precio Mensual -->
+                            <div class="col-md-6 mb-3">
+                                <label for="precio_mensual" class="form-label">
+                                    <i class="bi bi-currency-dollar me-1"></i>
+                                    Precio Mensual *
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" 
+                                           class="form-control price-input" 
+                                           id="precio_mensual" 
+                                           name="precio_mensual" 
+                                           step="0.01" 
+                                           min="0" 
+                                           required 
+                                           placeholder="0.00">
+                                </div>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa el precio mensual.
+                                </div>
+                            </div>
+
+                            <!-- Duración del Contrato -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-clock me-1"></i>
+                                    Duración del Contrato
+                                </label>
+                                <div class="form-control-plaintext" id="duracion">
+                                    Selecciona las fechas para calcular la duración
+                                </div>
+                            </div>
+
+                            <!-- Depósito -->
+                            <div class="col-md-6 mb-3">
+                                <label for="deposito" class="form-label">
+                                    <i class="bi bi-shield-check me-1"></i>
+                                    Depósito
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" 
+                                           class="form-control price-input" 
+                                           id="deposito" 
+                                           name="deposito" 
+                                           step="0.01" 
+                                           min="0" 
+                                           placeholder="0.00">
+                                </div>
+                                <div class="form-text">
+                                    Monto del depósito de garantía (opcional)
+                                </div>
+                            </div>
+
+                            <!-- Comisión -->
+                            <div class="col-md-6 mb-3">
+                                <label for="comision" class="form-label">
+                                    <i class="bi bi-percent me-1"></i>
+                                    Comisión
+                                </label>
+                                <div class="input-group">
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="comision" 
+                                           name="comision" 
+                                           step="0.01" 
+                                           min="0" 
+                                           max="100" 
+                                           placeholder="0">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                                <div class="form-text">
+                                    Porcentaje de comisión (opcional)
+                                </div>
+                            </div>
+
+                            <!-- Condiciones Especiales -->
+                            <div class="col-12 mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-list-check me-1"></i>
+                                    Condiciones del Contrato
+                                </label>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="incluye_servicios" name="condiciones[]" value="incluye_servicios">
+                                            <label class="form-check-label" for="incluye_servicios">
+                                                Incluye Servicios
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="mascotas_permitidas" name="condiciones[]" value="mascotas_permitidas">
+                                            <label class="form-check-label" for="mascotas_permitidas">
+                                                Mascotas Permitidas
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="renovacion_automatica" name="condiciones[]" value="renovacion_automatica">
+                                            <label class="form-check-label" for="renovacion_automatica">
+                                                Renovación Automática
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Observaciones -->
+                            <div class="col-12 mb-3">
+                                <label for="observaciones" class="form-label">
+                                    <i class="bi bi-text-paragraph me-1"></i>
+                                    Observaciones
+                                </label>
+                                <textarea class="form-control" 
+                                          id="observaciones" 
+                                          name="observaciones" 
+                                          rows="4" 
+                                          placeholder="Condiciones especiales, notas importantes, etc..."></textarea>
+                                <div class="form-text">
+                                    Información adicional sobre el contrato
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <a href="{{ url_for('contratos') }}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle me-2"></i>
+                                    Cancelar
+                                </a>
+                            </div>
+                            <div>
+                                <button type="reset" class="btn btn-outline-warning me-2">
+                                    <i class="bi bi-arrow-clockwise me-2"></i>
+                                    Limpiar
+                                </button>
+                                <button type="submit" class="btn btn-primary" {% if not propiedades or not inquilinos %}disabled{% endif %}>
+                                    <i class="bi bi-check-circle me-2"></i>
+                                    Crear Contrato
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Help Card -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="bi bi-question-circle me-2"></i>
+                        Información del Contrato
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Campos Obligatorios:</h6>
+                            <ul class="mb-0">
+                                <li>Propiedad (debe estar disponible)</li>
+                                <li>Inquilino registrado</li>
+                                <li>Fechas de inicio y fin</li>
+                                <li>Precio mensual</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Recomendaciones:</h6>
+                            <ul class="mb-0">
+                                <li>Verifica que la propiedad esté disponible</li>
+                                <li>Establece fechas realistas</li>
+                                <li>Documenta todas las condiciones especiales</li>
+                                <li>Calcula correctamente el depósito</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation and enhancement
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.needs-validation');
+    const propiedadSelect = document.getElementById('propiedad_id');
+    const precioInput = document.getElementById('precio_mensual');
+    const fechaInicio = document.getElementById('fecha_inicio');
+    const fechaFin = document.getElementById('fecha_fin');
+    const duracionDiv = document.getElementById('duracion');
+    
+    // Auto-fill price when property is selected
+    propiedadSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const precio = selectedOption.getAttribute('data-precio');
+        if (precio) {
+            precioInput.value = precio;
+        }
+    });
+
+    // Calculate duration when dates change
+    function calculateDuration() {
+        if (fechaInicio.value && fechaFin.value) {
+            const start = new Date(fechaInicio.value);
+            const end = new Date(fechaFin.value);
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const months = Math.floor(diffDays / 30);
+            const days = diffDays % 30;
+            
+            let durationText = '';
+            if (months > 0) {
+                durationText += `${months} mes${months > 1 ? 'es' : ''}`;
+            }
+            if (days > 0) {
+                durationText += `${durationText ? ' y ' : ''}${days} día${days > 1 ? 's' : ''}`;
+            }
+            
+            duracionDiv.textContent = durationText || '0 días';
+        }
+    }
+
+    fechaInicio.addEventListener('change', function() {
+        fechaFin.min = this.value;
+        calculateDuration();
+    });
+
+    fechaFin.addEventListener('change', function() {
+        fechaInicio.max = this.value;
+        calculateDuration();
+    });
+
+    // Real-time validation
+    const inputs = form.querySelectorAll('input[required], select[required]');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+    });
+
+    // Price formatting
+    const priceInputs = document.querySelectorAll('.price-input');
+    priceInputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            const value = parseFloat(this.value);
+            if (!isNaN(value)) {
+                this.value = value.toFixed(2);
+            }
+        });
+    });
+
+    // Auto-save functionality
+    const inputsToSave = form.querySelectorAll('input, select, textarea');
+    
+    inputsToSave.forEach(input => {
+        input.addEventListener('change', function() {
+            const data = {};
+            inputsToSave.forEach(inp => {
+                if (inp.type === 'checkbox') {
+                    data[inp.name] = inp.checked;
+                } else {
+                    data[inp.name] = inp.value;
+                }
+            });
+            localStorage.setItem('nuevo_contrato_form', JSON.stringify(data));
+        });
+    });
+
+    // Restore form data
+    const savedData = localStorage.getItem('nuevo_contrato_form');
+    if (savedData) {
+        const data = JSON.parse(savedData);
+        Object.keys(data).forEach(key => {
+            const input = form.querySelector(`[name="${key}"]`);
+            if (input) {
+                if (input.type === 'checkbox') {
+                    input.checked = data[key];
+                } else {
+                    input.value = data[key];
+                }
+            }
+        });
+        // Recalculate duration if dates are restored
+        if (data.fecha_inicio && data.fecha_fin) {
+            calculateDuration();
+        }
+    }
+
+    // Clear saved data on successful submit
+    form.addEventListener('submit', function() {
+        if (this.checkValidity()) {
+            localStorage.removeItem('nuevo_contrato_form');
+        }
+    });
+});
+</script>
+{% endblock %}
