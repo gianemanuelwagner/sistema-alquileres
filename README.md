@@ -1,140 +1,136 @@
-# Sistema de Alquileres - Flask
+# Sistema de Gestión de Alquileres
 
-Un sistema completo de administración de alquileres desarrollado con Flask y Python. Permite gestionar propiedades, inquilinos y contratos de manera eficiente y profesional.
+Una aplicación web completa para la gestión de propiedades, inquilinos y contratos de alquiler.
 
 ## 🚀 Características
 
-- **Dashboard Interactivo**: Resumen general con estadísticas y actividad reciente
-- **Gestión de Propiedades**: CRUD completo para propiedades con filtros y búsqueda
-- **Gestión de Inquilinos**: Registro y administración de inquilinos
-- **Gestión de Contratos**: Creación y seguimiento de contratos de alquiler
-- **Interfaz Moderna**: Diseño responsive con Bootstrap 5 y CSS personalizado
-- **Funcionalidades Avanzadas**: Búsqueda, filtros, exportación y validaciones
-- **Base de Datos SQLite**: Fácil de configurar y mantener
+- **Gestión de Propiedades**: Agregar, editar y eliminar propiedades
+- **Gestión de Inquilinos**: Administrar información de inquilinos
+- **Gestión de Contratos**: Crear y gestionar contratos de alquiler
+- **Sistema de Usuarios**: Autenticación y autorización
+- **Dashboard**: Vista general con estadísticas
+- **Sistema de Paquetes**: Diferentes niveles de servicio
+- **Interfaz Responsiva**: Diseño moderno y adaptable
+
+## 🛠️ Tecnologías Utilizadas
+
+- **Backend**: Python Flask
+- **Base de Datos**: SQLite
+- **Frontend**: HTML, CSS, JavaScript
+- **Autenticación**: Werkzeug Security
+- **UI Framework**: Bootstrap
 
 ## 📋 Requisitos
 
-- Python 3.8 o superior
+- Python 3.7+
 - pip (gestor de paquetes de Python)
 
-## 🛠️ Instalación
+## 🔧 Instalación
 
-1. **Clona o descarga el proyecto**
+1. **Clonar el repositorio**
    ```bash
-   git clone <url-del-repositorio>
-   cd alquileres
+   git clone https://github.com/tu-usuario/sistema-alquileres.git
+   cd sistema-alquileres
    ```
 
-2. **Instala las dependencias**
+2. **Instalar dependencias**
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Ejecuta la aplicación**
+3. **Ejecutar la aplicación**
    ```bash
    python app.py
    ```
 
-4. **Abre tu navegador**
-   ```
-   http://localhost:5000
-   ```
+4. **Acceder a la aplicación**
+   - Abrir navegador en: `http://localhost:5000`
+   - Usuario por defecto: `admin`
+   - Contraseña por defecto: `admin123`
 
-## 📁 Estructura del Proyecto
+## 📊 Estructura del Proyecto
 
 ```
-alquileres/
+sistema-alquileres/
 ├── app.py                 # Aplicación principal Flask
-├── requirements.txt       # Dependencias del proyecto
-├── README.md             # Este archivo
-├── alquileres.db         # Base de datos SQLite (se crea automáticamente)
-├── templates/            # Plantillas HTML
-│   ├── base.html         # Plantilla base
-│   ├── index.html        # Dashboard principal
-│   ├── propiedades.html  # Lista de propiedades
-│   ├── nueva_propiedad.html
-│   ├── editar_propiedad.html
-│   ├── inquilinos.html   # Lista de inquilinos
-│   ├── nuevo_inquilino.html
-│   ├── editar_inquilino.html
-│   ├── contratos.html    # Lista de contratos
-│   └── nuevo_contrato.html
-└── static/               # Archivos estáticos
-    ├── css/
-    │   └── style.css     # Estilos personalizados
-    └── js/
-        └── main.js       # JavaScript personalizado
+├── requirements.txt       # Dependencias de Python
+├── README.md             # Documentación
+├── static/               # Archivos estáticos
+│   ├── css/
+│   │   └── style.css
+│   └── js/
+│       └── main.js
+└── templates/            # Plantillas HTML
+    ├── base.html
+    ├── index.html
+    ├── login.html
+    ├── register.html
+    ├── propiedades.html
+    ├── inquilinos.html
+    ├── contratos.html
+    └── ...
 ```
 
-## 🎯 Funcionalidades Principales
+## 🗄️ Base de Datos
+
+La aplicación utiliza SQLite con las siguientes tablas principales:
+
+- **usuarios**: Información de usuarios del sistema
+- **paquetes**: Diferentes niveles de servicio
+- **propiedades**: Información de propiedades
+- **inquilinos**: Datos de inquilinos
+- **contratos**: Contratos de alquiler
+
+## 🔐 Sistema de Autenticación
+
+- Registro de nuevos usuarios
+- Inicio de sesión seguro
+- Protección de rutas
+- Gestión de sesiones
+
+## 📱 Funcionalidades Principales
 
 ### Dashboard
-- Estadísticas en tiempo real
-- Actividad reciente
-- Acciones rápidas
-- Información del sistema
+- Estadísticas generales
+- Propiedades recientes
+- Contratos activos
+- Información del paquete
 
-### Propiedades
-- Lista con filtros y búsqueda
+### Gestión de Propiedades
 - Agregar nuevas propiedades
 - Editar información existente
-- Estados: disponible, alquilada, mantenimiento
-- Características: tipo, habitaciones, baños, precio
+- Cambiar estado (disponible/alquilada)
+- Eliminar propiedades
 
-### Inquilinos
-- Registro completo de inquilinos
-- Información de contacto
-- DNI y datos personales
-- Contacto de emergencia
-- Documentación requerida
+### Gestión de Inquilinos
+- Registrar nuevos inquilinos
+- Actualizar información personal
+- Historial de inquilinos
 
-### Contratos
-- Creación de contratos
-- Selección de propiedad e inquilino
-- Fechas de inicio y fin
-- Precio mensual y depósito
-- Estados: activo, vencido, cancelado
-- Alertas de vencimiento
+### Gestión de Contratos
+- Crear nuevos contratos
+- Definir fechas de inicio y fin
+- Establecer precios mensuales
+- Gestionar estados de contratos
 
-## 🎨 Características de la Interfaz
+## 🎨 Interfaz de Usuario
 
-- **Diseño Responsive**: Funciona en desktop, tablet y móvil
-- **Tema Moderno**: Gradientes, sombras y animaciones
-- **Iconografía**: Bootstrap Icons para mejor UX
-- **Validaciones**: Formularios con validación en tiempo real
-- **Notificaciones**: Alertas y mensajes de confirmación
-- **Accesibilidad**: Navegación por teclado y lectores de pantalla
+- Diseño responsive
+- Navegación intuitiva
+- Formularios validados
+- Mensajes de confirmación
+- Alertas de error
 
-## 🔧 Configuración Avanzada
+## 🔧 Configuración
 
 ### Variables de Entorno
-Puedes configurar las siguientes variables:
-
 ```bash
-export FLASK_ENV=development
-export FLASK_DEBUG=1
-export SECRET_KEY=tu_clave_secreta_aqui
+# Clave secreta para sesiones (cambiar en producción)
+SECRET_KEY=tu_clave_secreta_aqui
 ```
 
 ### Base de Datos
-La aplicación usa SQLite por defecto. Para cambiar a otra base de datos:
-
-1. Modifica la configuración en `app.py`
-2. Actualiza las consultas SQL según sea necesario
-3. Instala el driver correspondiente
-
-## 📊 Base de Datos
-
-### Tablas Principales
-
-**propiedades**
-- id, direccion, tipo, habitaciones, baños, precio, estado, fecha_creacion
-
-**inquilinos**
-- id, nombre, apellido, email, telefono, dni, fecha_creacion
-
-**contratos**
-- id, propiedad_id, inquilino_id, fecha_inicio, fecha_fin, precio_mensual, estado, fecha_creacion
+La base de datos se crea automáticamente al ejecutar la aplicación por primera vez.
 
 ## 🚀 Despliegue
 
@@ -143,69 +139,26 @@ La aplicación usa SQLite por defecto. Para cambiar a otra base de datos:
 python app.py
 ```
 
-### Producción (Gunicorn)
+### Producción
+Para producción, se recomienda usar un servidor WSGI como Gunicorn:
+
 ```bash
 pip install gunicorn
-gunicorn -w 4 -b 0.0.0.0:5000 app:app
+gunicorn -w 4 -b 0.0.0.0:8000 app:app
 ```
-
-### Docker (opcional)
-```dockerfile
-FROM python:3.9-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
-EXPOSE 5000
-CMD ["python", "app.py"]
-```
-
-## 🔒 Seguridad
-
-- Validación de formularios
-- Sanitización de datos
-- Protección CSRF (implementar según necesidades)
-- Autenticación (agregar según requerimientos)
-
-## 📈 Próximas Mejoras
-
-- [ ] Sistema de autenticación
-- [ ] Reportes y estadísticas avanzadas
-- [ ] Notificaciones por email
-- [ ] Subida de imágenes de propiedades
-- [ ] API REST
-- [ ] Aplicación móvil
-- [ ] Integración con sistemas de pago
-- [ ] Backup automático de base de datos
-
-## 🤝 Contribución
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
 
 ## 📝 Licencia
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+Este proyecto está bajo la Licencia MIT.
 
-## 🆘 Soporte
+## 🤝 Contribuciones
 
-Si tienes problemas o preguntas:
+Las contribuciones son bienvenidas. Por favor, abre un issue o pull request.
 
-1. Revisa la documentación
-2. Busca en los issues existentes
-3. Crea un nuevo issue con detalles del problema
+## 📞 Soporte
 
-## 🙏 Agradecimientos
-
-- Flask por el framework web
-- Bootstrap por el framework CSS
-- Bootstrap Icons por los iconos
-- La comunidad de desarrolladores
+Para soporte técnico, contacta a través de los issues del repositorio.
 
 ---
 
-**Desarrollado con ❤️ y Flask**
-"# alquileres" 
+**Desarrollado con ❤️ para la gestión eficiente de alquileres** 
