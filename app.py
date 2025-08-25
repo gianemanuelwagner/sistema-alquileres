@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 
 app = Flask(__name__)
-app.secret_key = 'tu_clave_secreta_aqui'
+app.secret_key = os.environ.get('SECRET_KEY', 'tu_clave_secreta_aqui')
 
 # Configuración de la base de datos
 DATABASE = 'alquileres.db'
@@ -609,4 +609,4 @@ def eliminar_contrato(id):
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
