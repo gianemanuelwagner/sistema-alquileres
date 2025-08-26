@@ -120,13 +120,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     });
 
-    // Form validation enhancement
+    // Form validation enhancement - CORREGIDO
     const forms = document.querySelectorAll('.needs-validation');
     forms.forEach(form => {
         form.addEventListener('submit', function(event) {
             if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
+            } else {
+                // Solo mostrar estado de carga si el formulario es válido
+                const submitButton = form.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    const originalText = submitButton.innerHTML;
+                    submitButton.innerHTML = '<span class="loading"></span> Procesando...';
+                    submitButton.disabled = true;
+                    
+                    // Restaurar el botón después de un tiempo máximo (por si hay error)
+                    setTimeout(() => {
+                        submitButton.innerHTML = originalText;
+                        submitButton.disabled = false;
+                    }, 10000);
+                }
             }
             form.classList.add('was-validated');
         });
@@ -196,17 +210,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             badge.classList.add('bg-secondary');
         }
-    });
-
-    // Loading states for buttons
-    const submitButtons = document.querySelectorAll('button[type="submit"]');
-    submitButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            if (this.form && this.form.checkValidity()) {
-                this.innerHTML = '<span class="loading"></span> Procesando...';
-                this.disabled = true;
-            }
-        });
     });
 
     // Copy to clipboard functionality
@@ -318,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.classList.add('dark-mode');
     }
 
-    // Auto-save form data (basic implementation)
+    // Auto-save form data - SIMPLIFICADO
     const autoSaveForms = document.querySelectorAll('.auto-save');
     autoSaveForms.forEach(form => {
         const formId = form.id || 'form_' + Math.random().toString(36).substr(2, 9);

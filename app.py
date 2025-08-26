@@ -339,22 +339,32 @@ def nueva_propiedad():
         return redirect(url_for('propiedades'))
     
     if request.method == 'POST':
-        direccion = request.form['direccion']
-        tipo = request.form['tipo']
-        habitaciones = request.form['habitaciones']
-        baños = request.form['baños']
-        precio = request.form['precio']
-        
-        conn = get_db_connection()
-        conn.execute('''
-            INSERT INTO propiedades (user_id, direccion, tipo, habitaciones, baños, precio)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (session['user_id'], direccion, tipo, habitaciones, baños, precio))
-        conn.commit()
-        conn.close()
-        
-        flash('Propiedad creada exitosamente', 'success')
-        return redirect(url_for('propiedades'))
+        try:
+            direccion = request.form['direccion']
+            tipo = request.form['tipo']
+            habitaciones = request.form['habitaciones']
+            baños = request.form['baños']
+            precio = request.form['precio']
+            
+            # Validar datos requeridos
+            if not direccion or not tipo or not precio:
+                flash('Por favor completa todos los campos requeridos.', 'danger')
+                return render_template('nueva_propiedad.html')
+            
+            conn = get_db_connection()
+            conn.execute('''
+                INSERT INTO propiedades (user_id, direccion, tipo, habitaciones, baños, precio)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (session['user_id'], direccion, tipo, habitaciones, baños, precio))
+            conn.commit()
+            conn.close()
+            
+            flash('Propiedad creada exitosamente', 'success')
+            return redirect(url_for('propiedades'))
+        except Exception as e:
+            print(f"Error al crear propiedad: {e}")
+            flash('Error al crear la propiedad. Por favor intenta nuevamente.', 'danger')
+            return render_template('nueva_propiedad.html')
     
     return render_template('nueva_propiedad.html')
 
@@ -425,22 +435,32 @@ def nuevo_inquilino():
         return redirect(url_for('inquilinos'))
     
     if request.method == 'POST':
-        nombre = request.form['nombre']
-        apellido = request.form['apellido']
-        email = request.form['email']
-        telefono = request.form['telefono']
-        dni = request.form['dni']
-        
-        conn = get_db_connection()
-        conn.execute('''
-            INSERT INTO inquilinos (user_id, nombre, apellido, email, telefono, dni)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (session['user_id'], nombre, apellido, email, telefono, dni))
-        conn.commit()
-        conn.close()
-        
-        flash('Inquilino creado exitosamente', 'success')
-        return redirect(url_for('inquilinos'))
+        try:
+            nombre = request.form['nombre']
+            apellido = request.form['apellido']
+            email = request.form['email']
+            telefono = request.form['telefono']
+            dni = request.form['dni']
+            
+            # Validar datos requeridos
+            if not nombre or not apellido or not dni:
+                flash('Por favor completa todos los campos requeridos.', 'danger')
+                return render_template('nuevo_inquilino.html')
+            
+            conn = get_db_connection()
+            conn.execute('''
+                INSERT INTO inquilinos (user_id, nombre, apellido, email, telefono, dni)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (session['user_id'], nombre, apellido, email, telefono, dni))
+            conn.commit()
+            conn.close()
+            
+            flash('Inquilino creado exitosamente', 'success')
+            return redirect(url_for('inquilinos'))
+        except Exception as e:
+            print(f"Error al crear inquilino: {e}")
+            flash('Error al crear el inquilino. Por favor intenta nuevamente.', 'danger')
+            return render_template('nuevo_inquilino.html')
     
     return render_template('nuevo_inquilino.html')
 
@@ -519,25 +539,35 @@ def nuevo_contrato():
     conn = get_db_connection()
     
     if request.method == 'POST':
-        propiedad_id = request.form['propiedad_id']
-        inquilino_id = request.form['inquilino_id']
-        fecha_inicio = request.form['fecha_inicio']
-        fecha_fin = request.form['fecha_fin']
-        precio_mensual = request.form['precio_mensual']
-        
-        conn.execute('''
-            INSERT INTO contratos (user_id, propiedad_id, inquilino_id, fecha_inicio, fecha_fin, precio_mensual)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (session['user_id'], propiedad_id, inquilino_id, fecha_inicio, fecha_fin, precio_mensual))
-        
-        # Actualizar estado de la propiedad
-        conn.execute('UPDATE propiedades SET estado = "alquilada" WHERE id = ? AND user_id = ?', (propiedad_id, session['user_id']))
-        
-        conn.commit()
-        conn.close()
-        
-        flash('Contrato creado exitosamente', 'success')
-        return redirect(url_for('contratos'))
+        try:
+            propiedad_id = request.form['propiedad_id']
+            inquilino_id = request.form['inquilino_id']
+            fecha_inicio = request.form['fecha_inicio']
+            fecha_fin = request.form['fecha_fin']
+            precio_mensual = request.form['precio_mensual']
+            
+            # Validar datos requeridos
+            if not propiedad_id or not inquilino_id or not fecha_inicio or not fecha_fin or not precio_mensual:
+                flash('Por favor completa todos los campos requeridos.', 'danger')
+                return render_template('nuevo_contrato.html', propiedades=propiedades, inquilinos=inquilinos)
+            
+            conn.execute('''
+                INSERT INTO contratos (user_id, propiedad_id, inquilino_id, fecha_inicio, fecha_fin, precio_mensual)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (session['user_id'], propiedad_id, inquilino_id, fecha_inicio, fecha_fin, precio_mensual))
+            
+            # Actualizar estado de la propiedad
+            conn.execute('UPDATE propiedades SET estado = "alquilada" WHERE id = ? AND user_id = ?', (propiedad_id, session['user_id']))
+            
+            conn.commit()
+            conn.close()
+            
+            flash('Contrato creado exitosamente', 'success')
+            return redirect(url_for('contratos'))
+        except Exception as e:
+            print(f"Error al crear contrato: {e}")
+            flash('Error al crear el contrato. Por favor intenta nuevamente.', 'danger')
+            return render_template('nuevo_contrato.html', propiedades=propiedades, inquilinos=inquilinos)
     
     propiedades = conn.execute('SELECT * FROM propiedades WHERE estado = "disponible" AND user_id = ?', (session['user_id'],)).fetchall()
     inquilinos = conn.execute('SELECT * FROM inquilinos WHERE user_id = ?', (session['user_id'],)).fetchall()

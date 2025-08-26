@@ -240,7 +240,7 @@
 </div>
 
 <script>
-// Form validation and enhancement
+// Form validation and enhancement - SIMPLIFICADO
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('.needs-validation');
     
@@ -260,43 +260,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Price formatting
     const priceInput = document.getElementById('precio');
-    priceInput.addEventListener('blur', function() {
-        const value = parseFloat(this.value);
-        if (!isNaN(value)) {
-            this.value = value.toFixed(2);
-        }
-    });
-
-    // Auto-save functionality
-    const formData = new FormData(form);
-    const inputsToSave = form.querySelectorAll('input, select, textarea');
-    
-    inputsToSave.forEach(input => {
-        input.addEventListener('change', function() {
-            const data = {};
-            inputsToSave.forEach(inp => {
-                if (inp.type === 'checkbox') {
-                    data[inp.name] = inp.checked;
-                } else {
-                    data[inp.name] = inp.value;
-                }
-            });
-            localStorage.setItem('nueva_propiedad_form', JSON.stringify(data));
-        });
-    });
-
-    // Restore form data
-    const savedData = localStorage.getItem('nueva_propiedad_form');
-    if (savedData) {
-        const data = JSON.parse(savedData);
-        Object.keys(data).forEach(key => {
-            const input = form.querySelector(`[name="${key}"]`);
-            if (input) {
-                if (input.type === 'checkbox') {
-                    input.checked = data[key];
-                } else {
-                    input.value = data[key];
-                }
+    if (priceInput) {
+        priceInput.addEventListener('blur', function() {
+            const value = parseFloat(this.value);
+            if (!isNaN(value)) {
+                this.value = value.toFixed(2);
             }
         });
     }

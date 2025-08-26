@@ -298,7 +298,7 @@
 </div>
 
 <script>
-// Form validation and enhancement
+// Form validation and enhancement - SIMPLIFICADO
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('.needs-validation');
     
@@ -356,39 +356,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
-    // Auto-save functionality
-    const inputsToSave = form.querySelectorAll('input, select, textarea');
-    
-    inputsToSave.forEach(input => {
-        input.addEventListener('change', function() {
-            const data = {};
-            inputsToSave.forEach(inp => {
-                if (inp.type === 'checkbox') {
-                    data[inp.name] = inp.checked;
-                } else {
-                    data[inp.name] = inp.value;
-                }
-            });
-            localStorage.setItem('nuevo_inquilino_form', JSON.stringify(data));
-        });
-    });
-
-    // Restore form data
-    const savedData = localStorage.getItem('nuevo_inquilino_form');
-    if (savedData) {
-        const data = JSON.parse(savedData);
-        Object.keys(data).forEach(key => {
-            const input = form.querySelector(`[name="${key}"]`);
-            if (input) {
-                if (input.type === 'checkbox') {
-                    input.checked = data[key];
-                } else {
-                    input.value = data[key];
-                }
-            }
-        });
-    }
 
     // Clear saved data on successful submit
     form.addEventListener('submit', function() {
